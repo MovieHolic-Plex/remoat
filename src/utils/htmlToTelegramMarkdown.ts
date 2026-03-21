@@ -219,6 +219,12 @@ export function htmlToTelegramHtml(html: string): string {
     result = stripUnsupportedTags(result);
 
     result = decodeSafeEntities(result);
+    
+    // Fix unmatched </pre> or <code></pre> caused by DOM replacements
+    result = result.replace(/([^>])\s*<code>([\s\S]*?)<\/code>\s*<\/pre>/gi, '$1\n<pre><code>$2</code></pre>');
+    result = result.replace(/^<code>([\s\S]*?)<\/code>\s*<\/pre>/gi, '<pre><code>$1</code></pre>');
+    result = result.replace(/(?<!<pre>)\s*(<code[^>]*>[\s\S]*?<\/code>)\s*<\/pre>/gi, '<pre>$1</pre>');
+    
     result = result.replace(/\n{3,}/g, '\n\n');
     result = result.trim();
 
