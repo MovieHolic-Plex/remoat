@@ -470,7 +470,7 @@ async function sendPromptToAntigravity(
             cdpService: cdp,
             pollIntervalMs: 2000,
             maxDurationMs: 1800000,
-            stopGoneConfirmCount: 3,
+            stopGoneConfirmCount: 15,
             onPhaseChange: () => { },
             onProcessLog: (logText) => {
                 if (isFinalized) return;

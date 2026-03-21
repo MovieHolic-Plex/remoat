@@ -372,6 +372,12 @@ export const RESPONSE_SELECTORS = {
                 }
             }
         }
+        if (!isGenerating) {
+            for (const scope of scopes) {
+                const spinners = scope.querySelectorAll('.animate-spin, svg.lucide-loader');
+                if (spinners.length > 0) { isGenerating = true; break; }
+            }
+        }
 
         // --- Quota error ---
         let quotaError = false;
