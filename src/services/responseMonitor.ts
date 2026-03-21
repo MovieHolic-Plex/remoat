@@ -129,7 +129,7 @@ export const RESPONSE_SELECTORS = {
                     btn.getAttribute('aria-label') || '',
                     btn.getAttribute('title') || '',
                 ];
-                if (labels.some(isStopLabel)) {
+                if (labels.some(isStopLabel) || btn.querySelector('svg.lucide-square, i.codicon-debug-stop')) {
                     return { isGenerating: true };
                 }
             }
@@ -182,7 +182,7 @@ export const RESPONSE_SELECTORS = {
                     btn.getAttribute('aria-label') || '',
                     btn.getAttribute('title') || '',
                 ];
-                if (labels.some(isStopLabel) && typeof btn.click === 'function') {
+                if ((labels.some(isStopLabel) || btn.querySelector('svg.lucide-square, i.codicon-debug-stop')) && typeof btn.click === 'function') {
                     btn.click();
                     return { ok: true, method: 'text-fallback' };
                 }
@@ -366,7 +366,7 @@ export const RESPONSE_SELECTORS = {
                 const buttons = scope.querySelectorAll('button, [role="button"]');
                 for (let i = 0; i < buttons.length; i++) {
                     const btn = buttons[i];
-                    if ([btn.textContent || '', btn.getAttribute('aria-label') || '', btn.getAttribute('title') || ''].some(isStopLabel)) {
+                    if ([btn.textContent || '', btn.getAttribute('aria-label') || '', btn.getAttribute('title') || ''].some(isStopLabel) || btn.querySelector('svg.lucide-square, i.codicon-debug-stop')) {
                         isGenerating = true; break outer;
                     }
                 }
