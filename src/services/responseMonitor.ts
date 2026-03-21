@@ -375,7 +375,16 @@ export const RESPONSE_SELECTORS = {
         if (!isGenerating) {
             for (const scope of scopes) {
                 const spinners = scope.querySelectorAll('.animate-spin, svg.lucide-loader');
-                if (spinners.length > 0) { isGenerating = true; break; }
+                for (let i = 0; i < spinners.length; i++) {
+                    const sp = spinners[i];
+                    // Ensure the spinner is actually part of the assistant's loading states
+                    if (!sp.closest('.antigravity-agent-side-panel') && !sp.closest('.agent-side-panel')) continue;
+                    const style = window.getComputedStyle(sp);
+                    if (style.display !== 'none' && style.opacity !== '0' && style.visibility !== 'hidden' && !sp.closest('.hidden')) {
+                        isGenerating = true; break;
+                    }
+                }
+                if (isGenerating) break;
             }
         }
 
