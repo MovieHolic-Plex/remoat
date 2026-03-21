@@ -18,14 +18,37 @@ export interface ChatSessionInfo {
 
 /** Script to get the state of the new chat button */
 const GET_NEW_CHAT_BUTTON_SCRIPT = `(() => {
-    const btn = document.querySelector('[data-tooltip-id="new-conversation-tooltip"]');
+    const isVisible = (el) => !!el && el.offsetParent !== null;
+    let btn = document.querySelector('[data-tooltip-id="new-conversation-tooltip"]');
+    
+    if (!btn) {
+        const els = Array.from(document.querySelectorAll('button, [role="button"], a, div[class*="cursor-pointer"]'));
+        for (const el of els) {
+            if (!isVisible(el)) continue;
+            const text = (el.getAttribute('aria-label') || el.getAttribute('title') || el.textContent || '').toLowerCase().trim();
+            if (text === 'new chat' || text === 'new conversation' || text === '새 채팅' || text === 'new') {
+                btn = el;
+                break;
+            }
+        }
+    }
+    if (!btn) {
+        const plusIcons = Array.from(document.querySelectorAll('svg.lucide-plus, svg.lucide-message-square-plus, i.codicon-add'));
+        for (const icon of plusIcons) {
+            if (!isVisible(icon)) continue;
+            btn = icon.closest('button, [role="button"], a, div[class*="cursor-pointer"]');
+            if (btn) break;
+        }
+    }
+    
     if (!btn) return { found: false };
-    const cursor = window.getComputedStyle(btn).cursor;
+    
     const rect = btn.getBoundingClientRect();
+    const style = window.getComputedStyle(btn);
     return {
         found: true,
-        enabled: cursor === 'pointer',
-        cursor,
+        enabled: !btn.disabled,
+        cursor: style.cursor,
         x: Math.round(rect.x + rect.width / 2),
         y: Math.round(rect.y + rect.height / 2),
     };
